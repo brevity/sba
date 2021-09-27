@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+sleep 20
+
 booking_post_1_resp=$(curl http://127.0.0.1:8080/booking \
   -s \
   -H 'Content-Type: application/json' \
