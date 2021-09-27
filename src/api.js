@@ -5,12 +5,16 @@ const bookings = require('./bookings.js')
 const api = express()
 
 api.locals.bookings = bookings
+api.locals.validPostData = validPostData
 
 api
 	.use(jsonParser)
 	.post('/booking', (request, response) => {
 		try {
-			// TODO: Validate body
+			if (!api.locals.validPostData(request.body)) {
+				return response.status(400).send({})
+			}
+
 			const booking = bookings.create(request.body)
 			return response.status(201).send(booking)
 		} catch (error) {
@@ -20,5 +24,27 @@ api
 	.get('/', (_, response) => {
 		response.json({ok: true})
 	})
+
+function validPostData(postData) {
+	return postData !== undefined
+	&& isPresent(postData, 'firstName')
+	&& isPresent(postData, 'lastName')
+	&& isPresent(postData, 'checkIn')
+	&& isPresent(postData, 'checkOut')
+	&& isPresent(postData, 'guests')
+	&& typeof postData.firstName === 'string'
+	&& typeof postData.lastName === 'string'
+	&& typeof postData.checkIn === 'string'
+	&& typeof postData.checkOut === 'string'
+	&& typeof postData.guests === 'number'
+	&& typeof postData.guests === 'number'
+}
+
+// TODO: stash in util module...
+// Or refactor all validation using joi : -/
+function isPresent(body, prop) {
+	return body[prop] !== undefined
+	&& body[prop] !== null
+}
 
 module.exports = api

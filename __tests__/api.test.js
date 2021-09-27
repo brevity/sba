@@ -1,33 +1,42 @@
 const request = require('supertest')
-const app = require('../src/api.js')
+const api = require('../src/api.js')
 
+const goodPostBody = {
+	firstName: 'Your',
+	lastName: 'Mom',
+	checkIn: '2042-01-01',
+	checkOut: '2042-01-03',
+	guests: 2,
+}
 describe('POST /booking', () => {
-	const goodBody = {
-		firstName: 'Your',
-		lastName: 'Mom',
-		checkIn: '2042-01-01',
-		checkOut: '2042-01-03',
-		guests: 2,
-	}
 	describe('Should return statusCode 200', () => {
-		test('if on the happy path', () => request(app)
+		test('if on the happy path', () => request(api)
 			.post('/booking')
 			.set('Accept', 'application/json')
-			.send(goodBody)
+			.send(goodPostBody)
 			.then(resp => {
 				expect(resp.statusCode).toBe(201)
 				expect(resp.body.id).toBeDefined()
 				expect(resp.body.info).toBeDefined()
 			}))
 	})
-	describe.skip('Should return statusCode 400', () => {
-		describe('if required props are absent', () => {
+	describe('Should return statusCode 400', () => {
+		describe('if bookingData is invalid', () => {
+			const badBody = Object.assign({}, goodPostBody)
+			delete badBody.firstName
+
+			return test('firstName is required', () => request(api)
+				.post('/booking')
+				.send(badBody)
+				.set('Accept', 'application/json')
+				.then(resp => {
+					expect(resp.statusCode).toBe(400)
+				}))
+		})
+		describe.skip('if required props are null', () => {
 			test('such as...', () => Promise.reject('nope'))
 		})
-		describe('if required props are null', () => {
-			test('such as...', () => Promise.reject('nope'))
-		})
-		describe('if props are in the wrong format', () => {
+		describe.skip('if props are in the wrong format', () => {
 			test('such as...', () => Promise.reject('nope'))
 		})
 	})
@@ -51,5 +60,23 @@ describe.skip('GET /booking/:id', () => {
 describe.skip('DEL /booking/:id', () => {
 	describe('Should return statusCode 203', () => {
 		test('if on the happy path', () => Promise.reject('nope'))
+	})
+})
+
+describe('validPostData() should return false if..', () => {
+	const required = [
+		'firstName',
+		'lastName',
+		'checkIn',
+		'checkOut',
+		'guests',
+	]
+	required.map(prop => {
+		const badBody = Object.assign({}, goodPostBody)
+		delete badBody[prop]
+
+		return test(prop + ' is missing', () => {
+			expect(api.locals.validPostData(badBody)).toBe(false)
+		})
 	})
 })
