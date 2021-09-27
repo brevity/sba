@@ -42,9 +42,26 @@ describe('POST /booking', () => {
 		})
 	})
 
+	// And this is where the clock runs down.
 	describe.skip('Should return statusCode 422', () => {
 		describe('if there is a scheduling conflict', () => {
-			test('such as a previously booked date', () => Promise.reject('nope'))
+			bookings.addToSchedule('2022-02-05', '2022-02-08')
+			const overlappingBooking = {
+				checkIn: '2022-02-07',
+				checkOut: '2022-02-09',
+				firstName: 'Moonunit',
+				lastName: 'Zappa',
+				guests: 2,
+			}
+			test('such as a previously booked date', () =>
+				request(api)
+					.post('/booking')
+					.set('Accept', 'application/json')
+					.send(overlappingBooking)
+					.then(resp => {
+						expect(resp.statusCode).toBe(422)
+					}),
+			)
 		})
 	})
 })
@@ -73,9 +90,28 @@ describe('GET /booking/:id', () => {
 	})
 })
 
-describe.skip('DEL /booking/:id', () => {
-	describe('Should return statusCode 203', () => {
-		test('if on the happy path', () => Promise.reject('nope'))
+describe('DEL /booking/:id', () => {
+	describe('Should return statusCode 202', () => {
+		bookings.db[26] = Object.assign({},
+			goodPostBody,
+			{id: 26},
+		)
+		test('if on the happy path', () => request(api)
+			.delete('/booking/26')
+			.set('Accept', 'application/json')
+			.send()
+			.then(resp => {
+				expect(resp.statusCode).toBe(202)
+			}))
+	})
+	describe('Should return statusCode 404', () => {
+		test('if no booking to delete is found', () => request(api)
+			.delete('/booking/27')
+			.set('Accept', 'application/json')
+			.send()
+			.then(resp => {
+				expect(resp.statusCode).toBe(404)
+			}))
 	})
 })
 
