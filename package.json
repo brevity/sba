@@ -1,0 +1,51 @@
+{
+  "name": "suite-booking-api",
+  "version": "1.0.0",
+  "description": "An example service which provides a RESTfull booking management API for a single suite.",
+  "main": "index.js",
+  "repository": "git+https://github.com/brevity/suite-booking-api.git",
+  "author": "Andrew Toelle",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "make start",
+    "test": "make test"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^27.2.1",
+    "jest-expect-message": "^1.0.2",
+    "superagent": "^6.1.0",
+    "supertest": "^6.1.6",
+    "xo": "^0.44.0"
+  },
+  "xo": {
+    "semicolon": false,
+    "globals": [
+      "describe",
+      "test",
+      "expect"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "**.ts",
+          "**/**.ts",
+          "**.js",
+          "**/**.js"
+        ],
+        "rules": {
+          "capitalized-comments": "off",
+          "unicorn/no-array-reduce": 0,
+          "unicorn/prefer-module": 0,
+          "unicorn/prefer-node-protocol": 0
+        }
+      }
+    ]
+  },
+  "jest": {}
+}
