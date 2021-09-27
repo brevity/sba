@@ -40,3 +40,13 @@ Tests:       5 skipped, 11 passed, 16 total
 Snapshots:   0 total
 Time:        2.013 s
 ```
+
+
+> A note to reviewers.
+> 
+> This is not a good example of something I would consider done,
+> and rather reflects more of a re-orientation on implementing
+> a RESTfull API in node.
+> 
+> Cheers,
+> -at :-)
