@@ -1,7 +1,10 @@
 const INFO = 'how to retreive & cancel booking'
+const DB = {}
 
 module.exports = {
-	create: request => ({
+	db: DB,
+	get: id => DB[id],
+	create: _ => ({
 		id: 0,
 		info: INFO,
 	}),

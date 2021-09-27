@@ -9,6 +9,10 @@ api.locals.validPostData = validPostData
 
 api
 	.use(jsonParser)
+	.get('/booking/:id', (request, response) => {
+		const booking = bookings.get(request.params.id)
+		return response.status(200).send(booking)
+	})
 	.post('/booking', (request, response) => {
 		try {
 			if (!api.locals.validPostData(request.body)) {

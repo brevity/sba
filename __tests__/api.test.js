@@ -1,8 +1,9 @@
 const request = require('supertest')
 const api = require('../src/api.js')
+const bookings = require('../src/bookings.js')
 
 const goodPostBody = {
-	firstName: 'Your',
+	firstName: 'Someone\'s',
 	lastName: 'Mom',
 	checkIn: '2042-01-01',
 	checkOut: '2042-01-03',
@@ -48,11 +49,26 @@ describe('POST /booking', () => {
 	})
 })
 
-describe.skip('GET /booking/:id', () => {
+describe('GET /booking/:id', () => {
+	bookings.db[23] = {
+		id: 23,
+		firstName: 'Albert',
+		lastName: 'Aurelius',
+		checkIn: '2042-02-01',
+		checkOut: '2042-03-03',
+		guests: 2,
+	}
 	describe('Should return statusCode 200', () => {
-		test('if on the happy path', () => Promise.reject('nope'))
+		test('if on the happy path', () => request(api)
+			.get('/booking/23')
+			.set('Accept', 'application/json')
+			.send()
+			.then(resp => {
+				expect(resp.statusCode).toBe(200)
+				expect(resp.body).toEqual(bookings.db[23])
+			}))
 	})
-	describe('Should return statusCode 404', () => {
+	describe.skip('Should return statusCode 404', () => {
 		test('if no valid id is given', () => Promise.reject('nope'))
 	})
 })
