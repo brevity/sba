@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+booking_post_1_resp=$(curl http://127.0.0.1:8080/booking \
+  -s \
+  -H 'Content-Type: application/json' \
+  --data $(jq -c '.' ./scripts/booking-request-1.json))
+
+booking_get_1_resp=$(curl http://127.0.0.1:8080/booking/1111 \
+  -s \
+  -H 'Content-Type: application/json')
+
+booking_post_2_resp_1=$(curl http://127.0.0.1:8080/booking \
+  -s \
+  -H 'Content-Type: application/json' \
+  --data $(jq -c '.' ./scripts/booking-request-2-bad.json))
+
+booking_post_2_resp_2=$(curl http://127.0.0.1:8080/booking \
+  -s \
+  -H 'Content-Type: application/json' \
+  --data $(jq -c '.' ./scripts/booking-request-2-good.json))
+
+get_resp=$(curl http://127.0.0.1:8080/booking/1234 -s)
+
+echo
+echo $booking_post_1_resp
+echo $booking_get_1_resp
+echo $booking_post_2_resp_1
+echo $booking_post_2_resp_2
